@@ -8,6 +8,7 @@ camera-test.png
 rtsp-test.log
 *.encoder.log
 *.mp4
+!docs/media/live-camera.mp4
 *.avi
 *.apk
 *.xapk

@@ -12,7 +12,9 @@ No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoo
 
 ![EndoscopeViewerWIN showing live LIMINK video of the workshop tool holder](docs/screenshots/live-view.jpg)
 
-*Real LIMINK video in the Windows app. The monkey sticker remains head of camera quality assurance.*
+*Real LIMINK video in the Windows app at 2× digital zoom. The monkey sticker remains head of camera quality assurance.*
+
+[Watch the real camera sample (MP4)](docs/media/live-camera.mp4). The sample uses the same 2× center crop and portrait orientation as the screenshot; it contains camera footage only, with no audio or mouse cursor. Normal app recordings retain the original camera orientation and full frame.
 
 ## What works
 
@@ -159,5 +161,3 @@ Made by someone who looked at a phone-only inspection camera and took that perso
 🔧 More workshop mischief: **[JMSCNC.com](https://jmscnc.com)**
 
 🌀 Actual machining software, fewer tiny camera noodles: **[RotatoCAM.com](https://rotatocam.com)**
-
-
