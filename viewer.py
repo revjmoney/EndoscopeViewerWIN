@@ -325,7 +325,10 @@ class Viewer:
                 if kind == "frame":
                     image, count, jpeg = value
                     if self.recorder:
-                        self.recorder.offer(jpeg, image.size)
+                        recorded = self.display_image(image, self.record_view)
+                        encoded = io.BytesIO()
+                        recorded.convert("RGB").save(encoded, format="JPEG", quality=95)
+                        self.recorder.offer(encoded.getvalue(), recorded.size)
                     if not self.paused:
                         self.image = image
                         self.draw()
@@ -348,13 +351,14 @@ class Viewer:
         self.preview = ImageTk.PhotoImage(image)
         self.canvas.configure(image=self.preview, text="")
 
-    def display_image(self):
-        image = self.image.rotate(self.rotation, expand=True)
-        if self.mirror:
+    def display_image(self, image=None, settings=None):
+        rotation, mirror, zoom = settings or (self.rotation, self.mirror, self.zoom)
+        image = (self.image if image is None else image).rotate(rotation, expand=True)
+        if mirror:
             image = ImageOps.mirror(image)
-        if self.zoom > 1:
+        if zoom > 1:
             w, h = image.size
-            dx, dy = w / self.zoom, h / self.zoom
+            dx, dy = w / zoom, h / zoom
             image = image.crop(((w-dx)/2, (h-dy)/2, (w+dx)/2, (h+dy)/2))
         return image
 
@@ -384,9 +388,10 @@ class Viewer:
         path = filedialog.asksaveasfilename(initialdir=str(directory), defaultextension=".mp4", filetypes=[("MP4 video", "*.mp4")])
         if path:
             try:
-                self.recorder = Recorder(path, self.image.size)
+                self.record_view = (self.rotation, self.mirror, self.zoom)
+                self.recorder = Recorder(path, self.display_image(settings=self.record_view).size)
                 self.record_button.configure(text="Stop recording")
-                self.capture_status.set("Recording camera video (original orientation)…")
+                self.capture_status.set(f"Recording the view at start: {self.zoom}× zoom, {self.rotation}° rotation, mirror {'on' if self.mirror else 'off'}…")
             except (OSError, RuntimeError) as exc:
                 messagebox.showerror("Recording", str(exc))
 

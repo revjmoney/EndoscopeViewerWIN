@@ -14,7 +14,7 @@ No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoo
 
 *Real LIMINK video in the Windows app at 2× digital zoom. The monkey sticker remains head of camera quality assurance.*
 
-[Watch the real camera sample (MP4)](docs/media/live-camera.mp4). The sample uses the same 2× center crop and portrait orientation as the screenshot; it contains camera footage only, with no audio or mouse cursor. Normal app recordings retain the original camera orientation and full frame.
+[Watch the 2× zoom camera sample (MP4)](docs/media/live-camera-2x.mp4). The sample uses the same 2× center crop and portrait orientation as the screenshot; it contains camera footage only, with no audio or mouse cursor.
 
 ## What works
 
@@ -23,7 +23,7 @@ No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoo
 - Live **MoLink-family UDP/JPEG video**, verified at **640 × 480** on our LIMINK unit.
 - Rotate, mirror, freeze, and digital zoom.
 - PNG snapshots of the displayed view.
-- MP4 recording through FFmpeg. Recording uses the original camera orientation and a 15 fps output timeline.
+- MP4 recording through FFmpeg, using the zoom, rotation, and mirror settings selected when recording starts, with a 15 fps output timeline. Those settings stay fixed for the recording even if you adjust the preview afterward.
 - **40 camera-control entries**, including information queries, resolution, format, lighting, focus, lens switching, motor-related controls, and camera Wi-Fi settings.
 - Clear command results: a reply, a timeout, or an error. A silent camera doesn't earn a “success” sticker.
 

@@ -10,11 +10,31 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 import camera_controls as controls
 import camera_wifi as wifi
-from viewer import UdpFrames
+from viewer import UdpFrames, Viewer
 
 
 def control(name):
     return next(c for c in controls.CONTROLS if c.name == name)
+
+
+class RecordingViewTests(unittest.TestCase):
+    def test_recorded_view_uses_center_zoom_and_orientation(self):
+        image = Image.new('RGB', (8, 4))
+        for x in range(8):
+            for y in range(4):
+                image.putpixel((x, y), (x * 30, y * 60, 0))
+        view = object.__new__(Viewer)
+        recorded = view.display_image(image, (270, False, 2))
+        self.assertEqual(recorded.size, (2, 4))
+        self.assertEqual(recorded.getpixel((0, 0)), image.getpixel((2, 2)))
+        self.assertEqual(recorded.getpixel((1, 3)), image.getpixel((5, 1)))
+
+    def test_recording_settings_are_kept_when_preview_changes(self):
+        view = object.__new__(Viewer)
+        view.rotation, view.mirror, view.zoom = 0, False, 1
+        image = Image.new('RGB', (8, 4))
+        self.assertEqual(view.display_image(image, (270, True, 2)).size, (2, 4))
+        self.assertEqual(view.display_image(image).size, (8, 4))
 
 
 class ProtocolTests(unittest.TestCase):
