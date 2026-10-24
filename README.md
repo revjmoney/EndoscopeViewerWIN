@@ -10,9 +10,9 @@ So we inspected how **HD WIFI** talks to a LIMINK endoscope, figured out its vid
 
 No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoon to an app that thinks a settings screen is a personality.
 
-![EndoscopeViewerWIN showing its clearly labeled demo image](docs/screenshots/demo.jpg)
+![EndoscopeViewerWIN showing live LIMINK video of the workshop tool holder](docs/screenshots/live-view.jpg)
 
-*Actual Windows app displaying a synthetic demo image. No live camera footage appears in this screenshot.*
+*Real LIMINK video in the Windows app. The monkey sticker remains head of camera quality assurance.*
 
 ## What works
 
@@ -26,6 +26,8 @@ No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoo
 - Clear command results: a reply, a timeout, or an error. A silent camera doesn't earn a “success” sticker.
 
 
+
+![Camera controls in the actual Windows application](docs/screenshots/camera-controls.jpg)
 
 *Some controls are for other hardware using the same library. A focus button cannot grow a motor inside a fixed-focus camera. We asked nicely.*
 
@@ -157,4 +159,5 @@ Made by someone who looked at a phone-only inspection camera and took that perso
 🔧 More workshop mischief: **[JMSCNC.com](https://jmscnc.com)**
 
 🌀 Actual machining software, fewer tiny camera noodles: **[RotatoCAM.com](https://rotatocam.com)**
+
 
