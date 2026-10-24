@@ -14,7 +14,9 @@ No Android emulator. No phone balancing on a toolbox. No sacrificing an afternoo
 
 *Real LIMINK video in the Windows app at 2× digital zoom. The monkey sticker remains head of camera quality assurance.*
 
-[Watch the 2× zoom camera sample (MP4)](docs/media/live-camera-2x.mp4). The sample uses the same 2× center crop and portrait orientation as the screenshot; it contains camera footage only, with no audio or mouse cursor.
+[Watch the 2× zoom camera recording (MP4)](docs/media/viewer-recording-2x.mp4). Recorded with the app's **Record MP4** button: 14.73 seconds, 360 × 640, 2× zoom, 270° rotation, mirror off. The video contains camera footage only, with no audio or mouse cursor.
+
+![The actual app recording at 2x zoom and 270 degree rotation](docs/screenshots/recording-2x.jpg)
 
 ## What works
 

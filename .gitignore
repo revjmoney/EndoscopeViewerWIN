@@ -8,7 +8,7 @@ camera-test.png
 rtsp-test.log
 *.encoder.log
 *.mp4
-!docs/media/live-camera-2x.mp4
+!docs/media/viewer-recording-2x.mp4
 *.avi
 *.apk
 *.xapk
