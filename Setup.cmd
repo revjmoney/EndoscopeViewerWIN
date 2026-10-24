@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+echo Source checkout setup. The Windows release installer already includes Python.
 set "PIP_CACHE_DIR=%~dp0.cache\pip"
 where py >nul 2>nul
 if not errorlevel 1 (

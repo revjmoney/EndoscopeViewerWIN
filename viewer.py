@@ -22,6 +22,7 @@ from PIL import Image, ImageOps, ImageTk
 from camera_controls import CameraControls, CONTROLS
 import camera_wifi
 from recording import Recorder
+from app_paths import data_dir, VERSION
 
 
 class UdpFrames:
@@ -120,7 +121,7 @@ class Viewer:
         self.control_events = queue.Queue()
         self.find_stop = threading.Event()
         self.finding = False
-        self.settings_path = Path(__file__).with_name("preferences.json")
+        self.settings_path = data_dir() / "preferences.json"
         try:
             self.preferences = json.loads(self.settings_path.read_text())
         except (OSError, ValueError):
@@ -383,7 +384,7 @@ class Viewer:
         if self.image is None:
             messagebox.showinfo("Recording", "Receive a camera frame first.")
             return
-        directory = Path(__file__).parent / "recordings"
+        directory = data_dir() / "recordings"
         directory.mkdir(exist_ok=True)
         path = filedialog.asksaveasfilename(initialdir=str(directory), defaultextension=".mp4", filetypes=[("MP4 video", "*.mp4")])
         if path:
@@ -538,7 +539,7 @@ class Viewer:
         if self.image is None:
             messagebox.showinfo("Snapshot", "Connect and receive a frame first.")
             return
-        directory = Path(__file__).parent / "captures"
+        directory = data_dir() / "captures"
         directory.mkdir(exist_ok=True)
         path = filedialog.asksaveasfilename(initialdir=str(directory), defaultextension=".png", filetypes=[("PNG image", "*.png")])
         if path:
@@ -553,10 +554,10 @@ class Viewer:
             host = self.address()
             player = shutil.which("ffplay")
             if not player:
-                raise ValueError("ffplay is required for the RTSP test; it is currently installed at C:\\ffmpeg\\bin on this PC.")
+                raise ValueError("Install FFmpeg with ffplay on PATH to use the optional RTSP diagnostic.")
             self.disconnect()
             url = f"rtsp://{host}:8554/live/camera"
-            log = open(Path(__file__).with_name("rtsp-test.log"), "w", encoding="utf-8")
+            log = open(data_dir() / "rtsp-test.log", "w", encoding="utf-8")
             try:
                 process = subprocess.Popen([player, "-window_title", "HD WiFi RTSP test", "-rtsp_transport", "tcp", "-rw_timeout", "5000000", "-i", url], stdout=log, stderr=log, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
             finally:
@@ -582,6 +583,18 @@ class Viewer:
 
 
 if __name__ == "__main__":
+    if "--self-test" in sys.argv:
+        # Packaging check: no network, camera commands or user preferences loaded.
+        output = Path(sys.argv[sys.argv.index("--self-test") + 1])
+        check_root = tk.Tk()
+        check_root.withdraw()
+        check_photo = ImageTk.PhotoImage(Image.new("RGB", (8, 8), "green"), master=check_root)
+        result = {"version": VERSION, "frozen": bool(getattr(sys, "frozen", False)),
+                  "tk": str(check_root.tk.call("info", "patchlevel")),
+                  "image_width": check_photo.width(), "data_dir": str(data_dir())}
+        check_root.destroy()
+        output.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        sys.exit(0)
     root = tk.Tk()
     viewer = Viewer(root)
     if "--demo" in sys.argv:

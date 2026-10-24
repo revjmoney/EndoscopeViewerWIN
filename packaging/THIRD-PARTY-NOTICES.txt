@@ -1,0 +1,14 @@
+EndoscopeViewerWIN packages its own MIT-licensed source with Python, Tcl/Tk,
+Pillow and the libraries collected by PyInstaller's Pillow hooks.
+See the accompanying Python.txt, Pillow-and-dependencies.txt and Tcl/Tk notices.
+The Python and Pillow notices also cover their bundled third-party components.
+
+Built using PyInstaller (GPL with its executable-distribution exception):
+https://pyinstaller.org/en/stable/license.html
+
+The installer is generated with Inno Setup:
+https://jrsoftware.org/isinfo.php
+
+FFmpeg and ffplay are optional external applications; their binaries are not
+included. Install them separately to enable MP4 recording / RTSP diagnostics.
+They retain their respective licenses.

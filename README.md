@@ -55,25 +55,43 @@ Have another working model? Open an issue with its **brand, exact model, compani
 
 ## Get running on Windows
 
-This is currently a **Python desktop application**, not a packaged `.exe` installer.
+**[Download the Windows installer](https://github.com/revjmoney/EndoscopeViewerWIN/releases/latest)** — Python is included. No terminal, pip, or source setup is required.
 
 ### Requirements
 
-- Windows 10 or 11; development testing was performed on Windows.
-- Python **3.10 or newer**, with Tkinter.
-- Pillow, installed by the setup script.
+- **64-bit Windows 10 (1809 or later) or Windows 11**. The x64 release has been tested on the development PC; other machines and camera models still need testing.
 - A Wi-Fi adapter that can join the endoscope's 2.4 GHz hotspot.
 - **FFmpeg on PATH** for MP4 recording; `ffplay` is used only for the optional RTSP diagnostic. Live JPEG viewing and snapshots do not require FFmpeg.
 
-### Quick start
+### Install and connect
 
-1. Clone or download this repository.
-2. Run **`Setup.cmd`** once to create a local virtual environment and install Pillow.
-3. Power on the endoscope and plug in your PC's Wi-Fi adapter.
-4. Run **`Start Viewer.cmd`**.
+1. Open [Releases](https://github.com/revjmoney/EndoscopeViewerWIN/releases/latest) and download **`EndoscopeViewerWIN-1.0.0-windows-x64-setup.exe`**. GitHub's automatic “Source code” ZIP is for development.
+2. Run the installer, choose an installation folder, and optionally add a desktop shortcut. It installs for your Windows account without requiring administrator access. You can choose a folder on **F:** or another drive.
+3. Open **EndoscopeViewerWIN** from the Start menu or desktop shortcut.
+4. Power on the endoscope and plug in your PC's Wi-Fi adapter.
 5. Use **Find & Connect**. The default camera Wi-Fi password is `12345678`; change it in the viewer if your unit uses another password.
 
-Prefer a terminal?
+The initial release is **unsigned**; Windows may identify an unknown publisher. Release assets include `SHA256SUMS.txt` for checking the downloaded files.
+
+### Portable version
+
+Download **`EndoscopeViewerWIN-1.0.0-windows-x64-portable.zip`**, extract the **entire folder** to a writable location, then run `EndoscopeViewerWIN.exe`. Keep the `_internal` folder beside it. Python is included here too. Do not run the app from inside the ZIP.
+
+### Recording and the optional RTSP diagnostic
+
+Live viewing, camera controls and PNG snapshots work immediately. **MP4 recording requires a separate FFmpeg installation with `ffmpeg.exe` on PATH.** The optional RTSP diagnostic additionally needs `ffplay.exe`. FFmpeg is not bundled with this release. See the [official FFmpeg download page](https://ffmpeg.org/download.html) for Windows build links; restart the viewer after changing PATH.
+
+### Updates, saved files, and uninstall
+
+Close the viewer before running a newer installer. Use the same installation folder to update it. Preferences, default captures, recordings and temporary Wi-Fi files live in **`data` beside the installed executable**, outside the bundled runtime. You can choose another location in the save dialogs. Windows still manages the camera's saved Wi-Fi profile.
+
+Uninstall through **Windows Settings → Apps → Installed apps → EndoscopeViewerWIN → Uninstall**. The uninstaller preserves the `data` folder and your captures. Delete those manually only when you no longer need them. Portable users can remove the extracted folder after saving any captures they want to keep.
+
+### Run from source (developers)
+
+Only this route requires **Python 3.10+ with Tkinter**. Clone the repository, run **`Setup.cmd`** once, then **`Start Viewer.cmd`**. These scripts are for source checkouts; installed users launch the executable directly.
+
+Or use a terminal:
 
 ```powershell
 py -3 -m venv .venv
@@ -82,6 +100,8 @@ py -3 -m venv .venv
 ```
 
 If you keep development files on a particular drive, clone the repository there: the virtual environment and setup-script pip cache stay inside the project.
+
+For executable and installer build instructions, see [building Windows releases](docs/building.md).
 
 ### Manual connection
 

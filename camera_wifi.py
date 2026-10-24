@@ -104,7 +104,8 @@ def join(network, password, stop=None):
     if not interface:
         raise RuntimeError("No Wi-Fi interface was found for the selected camera.")
     profile, xml = profile_xml(network["ssid"], password, network.get("authentication", "WPA2-Personal"))
-    temporary = Path(__file__).resolve().parent / ".cache" / "wifi"
+    from app_paths import data_dir
+    temporary = data_dir() / ".cache" / "wifi"
     temporary.mkdir(parents=True, exist_ok=True)
     filename = None
     try:
