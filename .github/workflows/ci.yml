@@ -55,7 +55,7 @@ jobs:
           $p = Start-Process -FilePath ".\dist\app\EndoscopeViewerWIN\EndoscopeViewerWIN.exe" -ArgumentList "--self-test", "$PWD\build\frozen-check.json" -Wait -PassThru
           Get-Content build\frozen-check.json
           if ($p.ExitCode -ne 0) { throw "self-test exit code $($p.ExitCode)" }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: EndoscopeViewerWIN-windows-x64
           path: dist/release/
