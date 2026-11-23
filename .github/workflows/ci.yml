@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and build Windows release
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-build.txt
+      - name: Install build requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-build.txt
+      - name: Compile check
+        run: |
+          python -m compileall -q .
+      - name: Unit tests
+        run: |
+          python -m unittest discover -s tests -v
+      - name: Find or install Inno Setup
+        shell: pwsh
+        run: |
+          $iscc = Get-ChildItem -Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $iscc) {
+            choco install innosetup -y --no-progress
+            $iscc = Get-ChildItem -Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+          }
+          if (-not $iscc) { throw "ISCC.exe not found" }
+          "ISCC=$($iscc.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: Build installer and portable zip (packaging/build.py)
+        shell: pwsh
+        run: |
+          python packaging\build.py --iscc "$env:ISCC"
+      - name: Frozen self-test
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath ".\dist\app\EndoscopeViewerWIN\EndoscopeViewerWIN.exe" -ArgumentList "--self-test", "$PWD\build\frozen-check.json" -Wait -PassThru
+          Get-Content build\frozen-check.json
+          if ($p.ExitCode -ne 0) { throw "self-test exit code $($p.ExitCode)" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EndoscopeViewerWIN-windows-x64
+          path: dist/release/
+          retention-days: 30
+          if-no-files-found: error
+
+  guard:
+    name: Private data guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block home IPs, personal email, tokens, keys and secret project names
+        run: |
+          found=0
+          if git grep -n -I -E '192\.168\.1\.[0-9]+|myemail937|ghp_[A-Za-z0-9]{20,}|github_pat_|-----BEGIN [A-Z ]*PRIVATE KEY' -- . ':!.github/workflows/ci.yml'; then found=1; fi
+          if git grep -n -I -i -E 'rose.?engine|guilloche|gen-rose' -- . ':!.github/workflows/ci.yml'; then found=1; fi
+          if [ "$found" = 1 ]; then
+            echo "::error::Private data pattern found. Remove it before merging."
+            exit 1
+          fi
+          echo "Guard clean."
